@@ -11,16 +11,39 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:ast-query.helloWorld"
+    "onCommand:ast-query.promptForSearch",
+    "onView:ast-query.search",
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ast-query.helloWorld",
-        "title": "Hello World"
+        "command": "ast-query.promptForSearch",
+        "title": "AST Query: Search AST"
       }
-    ]
+    ],
+    "views": {
+      "ast-query": [
+        {
+          "id": "ast-query.search",
+          "name": "Search"
+        },
+        {
+          "id": "ast-query.results",
+          "name": "Results"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ast-query",
+          "title": "AST Query",
+          "icon": "resources/logo.svg"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
@@ -31,16 +54,21 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.44.0",
+    "@types/esquery": "^1.0.1",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.0",
-    "eslint": "^6.8.0",
-    "@typescript-eslint/parser": "^2.26.0",
+    "@types/vscode": "^1.44.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "^6.8.0",
     "glob": "^7.1.6",
     "mocha": "^7.1.1",
     "typescript": "^3.8.3",
     "vscode-test": "^1.3.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/typescript-estree": "^2.28.0",
+    "esquery": "^1.3.0"
   }
 }
