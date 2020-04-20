@@ -1,34 +1,15 @@
-import { TreeDataProvider, TreeItem, TreeItemCollapsibleState, ProviderResult, Event } from "vscode";
+import { ProviderResult } from "vscode";
+import { TreeNode } from "./common";
+import { BaseView } from "./BaseView";
 
-class SearchItem {
-  constructor(
-    private message: string
-  ) {}
-
-  getTreeItem(): TreeItem {
-    const item = new TreeItem(this.message, TreeItemCollapsibleState.None);
-    // item.contextValue = ResourceType.Message;
-    // item.description = this._description;
-    // item.tooltip = this._tooltip;
-    // item.iconPath = this._iconPath;
-    return item;
-  }
+class SearchMenuNode extends TreeNode {
 }
 
-export class SearchView implements TreeDataProvider<SearchItem> {
-  onDidChangeTreeData?: Event<SearchItem | null | undefined> | undefined;
-
-  getTreeItem(element: SearchItem): TreeItem | Thenable<TreeItem> {
-    return element.getTreeItem();
-  }
-
-  getChildren(element?: SearchItem | undefined): ProviderResult<SearchItem[]> {
-    if (!element) {
-      return [
-        new SearchItem('Search all files'),
-        new SearchItem('Search current file')
-      ];
-    }
-    return [];
+export class SearchView extends BaseView<SearchMenuNode> {
+  protected getRootChildren(): ProviderResult<SearchMenuNode[]> {
+    return [
+      new SearchMenuNode('Search all files'),
+      new SearchMenuNode('Search current file')
+    ];
   }
 }

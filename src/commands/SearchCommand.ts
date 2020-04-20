@@ -1,24 +1,30 @@
-import { Disposable, commands, window, Task, workspace, CustomExecution, Pseudoterminal, Event, EventEmitter, TerminalDimensions } from 'vscode';
+import { Disposable, commands, window, Task, workspace, CustomExecution, Pseudoterminal, Event, EventEmitter, TerminalDimensions, Uri } from 'vscode';
 import * as esquery from 'esquery';
+import { parse } from '@typescript-eslint/typescript-estree';
+import { Node } from 'estree';
+import { Container } from '../Container';
+import { ShowSearchResultsCommand } from './ShowSearchResultsCommand';
+import { SearchResultsByFilePath } from '../common';
 
-class SearchRunner implements Pseudoterminal {
-  private writeEmitter: EventEmitter<string>;
+async function findMatches(files: Uri[], query: string): Promise<SearchResultsByFilePath> {
+  const results = await Promise.all(files.map(async (file) => {
+    const contents = (await workspace.fs.readFile(file)).toString();
+    const ast = parse(contents);
+    const matches = esquery.query(ast as Node, query);
 
-  onDidWrite: Event<string>;
-  onDidOverrideDimensions?: Event<TerminalDimensions | undefined> | undefined;
-  onDidClose?: Event<number | void> | undefined;
+    return {
+      file,
+      fileContents: contents,
+      matches,
+    };
+  }));
 
-  constructor(private query: string) {
-    this.writeEmitter = new EventEmitter<string>();
-    this.onDidWrite = this.writeEmitter.event;
-  }
-
-  open(initialDimensions: TerminalDimensions | undefined): void {
-    console.log('open ' + this.query);
-  }
-  close(): void {
-    console.log('close ' + this.query);
-  }
+  return results
+    .filter(result => result.matches.length > 0)
+    .reduce((results, current) => ({
+      ...results,
+      [current.file.path]: current,
+    }), {});
 }
 
 export class SearchCommand implements Disposable {
@@ -28,16 +34,12 @@ export class SearchCommand implements Disposable {
 
   constructor() {
     this.disposable = commands.registerCommand(SearchCommand.key, async (query) => {
-      // new Task(
-      //   { type: 'ast-query.search' },
-      //   workspace.workspaceFolders[0],
-      //   'Search AST',
-      //   'ast-query',
-      //   new CustomExecution(async () => new SearchRunner(query))
-      // );
-
       const allFiles = await workspace.findFiles('**/*.{js,ts}', '**/node_modules/**');
-      console.log(allFiles);
+      const results = await findMatches(allFiles, query);
+
+      Container.resultsView.show(results);
+      Container.matchHighlightProvider.highlight(results);
+      await commands.executeCommand(ShowSearchResultsCommand.key);
     });
   }
 
