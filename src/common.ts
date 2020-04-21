@@ -19,3 +19,8 @@ export interface SearchResult {
   fileContents: string;
   matches: Node[];
 }
+
+export enum SearchScope {
+  global,
+  activeFile,
+}

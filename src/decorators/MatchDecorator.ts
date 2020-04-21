@@ -1,5 +1,6 @@
-import { Disposable, window, ThemeColor } from "vscode";
+import { Disposable, window, ThemeColor, DecorationOptions } from "vscode";
 import { SearchResultsByFilePath, rangeFor } from "../common";
+import { Container } from "../Container";
 
 export class MatchDecorator implements Disposable {
   private disposables: Disposable[] = [];
@@ -11,13 +12,25 @@ export class MatchDecorator implements Disposable {
   constructor() {
     this.disposables.push(
       window.onDidChangeActiveTextEditor(() => this.updateDecorators()),
-      // TODO: display only when the AST query extension is active
+      Container.resultsView.onDidChangeVisibility(() => this.updateDecorators()),
       // TODO: workspace.onDidChangeTextDocument - on change contents, rerun search for file
     );
   }
 
+  private setDecorations(decorations: DecorationOptions[]) {
+    const { activeTextEditor } = window;
+    if (activeTextEditor) {
+      activeTextEditor.setDecorations(this.decorationType, decorations);
+    }
+  }
+
   private updateDecorators() {
     const { activeTextEditor } = window;
+
+    if (!Container.resultsView.isVisible()) {
+      this.setDecorations([]);
+      return;
+    }
 
     const documentResults = this.results && activeTextEditor && this.results[activeTextEditor.document.uri.path];
     if (!documentResults) {
@@ -28,7 +41,7 @@ export class MatchDecorator implements Disposable {
       range: rangeFor(match),
     }));
 
-    activeTextEditor!.setDecorations(this.decorationType, decorations);
+    this.setDecorations(decorations);
   }
 
   highlight(results: SearchResultsByFilePath) {

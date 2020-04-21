@@ -1,9 +1,15 @@
-import { ProviderResult, Uri, EventEmitter, TreeItem, TreeItemCollapsibleState, ThemeIcon } from "vscode";
+import { ProviderResult, Uri, EventEmitter, TreeItem, TreeItemCollapsibleState, ThemeIcon, TreeViewVisibilityChangeEvent, window, Disposable, TreeView } from "vscode";
 import { Node } from 'estree';
 import { TreeNode } from "./common";
 import { BaseView } from "./BaseView";
 import { SearchResult, SearchResultsByFilePath } from "../common";
 import { OpenMatchCommand } from "../commands/OpenMatchCommand";
+
+class NoResultsFound extends TreeNode {
+  constructor() {
+    super('No results found');
+  }
+}
 
 class MatchNode extends TreeNode {
   constructor(private match: Node, private searchResult: SearchResult) {
@@ -45,15 +51,20 @@ class FileNode extends TreeNode {
   }
 }
 
-export class ResultsView extends BaseView<TreeNode> {
-  private changeEventEmitter = new EventEmitter<TreeNode>();
-  onDidChangeTreeData = this.changeEventEmitter.event;
-
+export class ResultsView extends BaseView<TreeNode> implements Disposable {
   private results?: SearchResult[];
+
+  protected getId() {
+    return 'ast-query.results';
+  }
 
   protected getRootChildren(): ProviderResult<TreeNode[]> {
     if (!this.results) {
       return [];
+    }
+
+    if (!this.results.length) {
+      return [new NoResultsFound()];
     }
 
     return this.results.map(result => new FileNode(result));
@@ -61,8 +72,6 @@ export class ResultsView extends BaseView<TreeNode> {
 
   show(results: SearchResultsByFilePath) {
     this.results = Object.values(results);
-    this.refreshEntireTree();
+    this.fireChangeEvent();
   }
-
-  private refreshEntireTree = () => this.changeEventEmitter.fire(undefined);
 }

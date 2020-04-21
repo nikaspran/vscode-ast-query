@@ -10,8 +10,8 @@ import { MatchDecorator } from './decorators/MatchDecorator';
 export class Container {
   static init(context: vscode.ExtensionContext) {
     context.subscriptions.push(
-      vscode.window.registerTreeDataProvider('ast-query.search', this.searchView),
-      vscode.window.registerTreeDataProvider('ast-query.results', this.resultsView),
+      this.searchView,
+      this.resultsView,
 
       new PromptForSearchCommand(),
       new SearchCommand(),

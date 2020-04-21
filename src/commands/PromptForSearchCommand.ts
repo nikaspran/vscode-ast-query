@@ -1,5 +1,6 @@
 import { Disposable, commands, window } from "vscode";
 import { SearchCommand } from "./SearchCommand";
+import { SearchScope } from "../common";
 
 export class PromptForSearchCommand implements Disposable {
   public static key = 'ast-query.promptForSearch';
@@ -7,13 +8,17 @@ export class PromptForSearchCommand implements Disposable {
   private disposable: Disposable;
 
   constructor() {
-    this.disposable = commands.registerCommand(PromptForSearchCommand.key, async () => {
-      const result = await window.showInputBox();
+    this.disposable = commands.registerCommand(PromptForSearchCommand.key, async ({ scope }: { scope: SearchScope }) => {
+      const result = await window.showInputBox({
+        prompt: `Search ${scope === SearchScope.global ? 'all files' : 'active file'}`,
+      });
       if (!result) {
         return;
       }
 
-      await commands.executeCommand(SearchCommand.key, result);
+      await commands.executeCommand(SearchCommand.key, result, {
+        scope
+      });
     });
   }
 
