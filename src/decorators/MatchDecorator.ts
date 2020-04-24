@@ -1,11 +1,16 @@
 import { Disposable, window, ThemeColor, DecorationOptions } from "vscode";
 import { SearchResultsByFilePath, rangeFor } from "../common";
 import { Container } from "../Container";
+import { Node } from "estree";
 
 export class MatchDecorator implements Disposable {
   private disposables: Disposable[] = [];
   private results?: SearchResultsByFilePath;
-  private decorationType = window.createTextEditorDecorationType({
+
+  private focusedMatchDecorationType = window.createTextEditorDecorationType({
+    backgroundColor: new ThemeColor('editor.findMatchBackground'),
+  });
+  private matchDecorationType = window.createTextEditorDecorationType({
     backgroundColor: new ThemeColor('editor.findMatchHighlightBackground'),
   });
 
@@ -13,22 +18,27 @@ export class MatchDecorator implements Disposable {
     this.disposables.push(
       window.onDidChangeActiveTextEditor(() => this.updateDecorators()),
       Container.resultsView.onDidChangeVisibility(() => this.updateDecorators()),
+      Container.resultsView.onSelectMatch(() => this.updateDecorators()),
       // TODO: workspace.onDidChangeTextDocument - on change contents, rerun search for file
     );
   }
 
-  private setDecorations(decorations: DecorationOptions[]) {
+  private decorate(matches: Node[], { focusedMatch }: { focusedMatch?: Node }) {
     const { activeTextEditor } = window;
-    if (activeTextEditor) {
-      activeTextEditor.setDecorations(this.decorationType, decorations);
+    if (!activeTextEditor) {
+      return;
     }
+
+    const otherMatches = matches.filter(match => match !== focusedMatch);
+    activeTextEditor.setDecorations(this.matchDecorationType, otherMatches.map(rangeFor));
+    activeTextEditor.setDecorations(this.focusedMatchDecorationType, focusedMatch ? [rangeFor(focusedMatch)] : []);
   }
 
   private updateDecorators() {
     const { activeTextEditor } = window;
 
     if (!Container.resultsView.isVisible()) {
-      this.setDecorations([]);
+      this.decorate([], { focusedMatch: undefined });
       return;
     }
 
@@ -37,11 +47,7 @@ export class MatchDecorator implements Disposable {
       return;
     }
 
-    const decorations = documentResults.matches.map(match => ({
-      range: rangeFor(match),
-    }));
-
-    this.setDecorations(decorations);
+    this.decorate(documentResults.matches, { focusedMatch: Container.resultsView.getSelectedMatch() });
   }
 
   highlight(results: SearchResultsByFilePath) {

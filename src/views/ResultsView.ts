@@ -1,4 +1,4 @@
-import { ProviderResult, Uri, EventEmitter, TreeItem, TreeItemCollapsibleState, ThemeIcon, TreeViewVisibilityChangeEvent, window, Disposable, TreeView } from "vscode";
+import { ProviderResult, Uri, EventEmitter, TreeItem, TreeItemCollapsibleState, ThemeIcon, TreeViewVisibilityChangeEvent, window, Disposable, TreeView, TreeViewSelectionChangeEvent } from "vscode";
 import { Node } from 'estree';
 import { TreeNode } from "./common";
 import { BaseView } from "./BaseView";
@@ -28,6 +28,10 @@ class MatchNode extends TreeNode {
     };
     return item;
   }
+
+  getMatch() {
+    return this.match;
+  }
 }
 
 class FileNode extends TreeNode {
@@ -52,7 +56,21 @@ class FileNode extends TreeNode {
 }
 
 export class ResultsView extends BaseView<TreeNode> implements Disposable {
+  private selectedMatch?: Node;
+
   private results?: SearchResult[];
+  private disposables: Disposable[] = [];
+
+  private changeSelectionEmitter = new EventEmitter<Node>();
+
+  constructor() {
+    super();
+    this.disposables.push(
+      this.changeSelectionEmitter,
+      this.tree.onDidChangeSelection(this.notifyAboutSelectedMatch, this),
+      this.onSelectMatch((node) => this.selectedMatch = node)
+    );
+  }
 
   protected getId() {
     return 'ast-query.results';
@@ -70,8 +88,27 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
     return this.results.map(result => new FileNode(result));
   }
 
+  private notifyAboutSelectedMatch(event: TreeViewSelectionChangeEvent<TreeNode>) {
+    const [selected] = event.selection;
+    this.changeSelectionEmitter.fire(selected instanceof MatchNode ? selected.getMatch() : undefined);
+  }
+
+  getSelectedMatch() {
+    return this.selectedMatch;
+  }
+
+  onSelectMatch(listener: (node: Node) => any) {
+    return this.changeSelectionEmitter.event(listener);
+  }
+
   show(results: SearchResultsByFilePath) {
     this.results = Object.values(results);
+    this.selectedMatch = undefined;
     this.fireChangeEvent();
+  }
+
+  dispose() {
+    Disposable.from(...this.disposables).dispose();
+    super.dispose();
   }
 }
