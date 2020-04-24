@@ -1,15 +1,17 @@
-import { Disposable, window, ThemeColor, DecorationOptions } from "vscode";
-import { SearchResultsByFilePath, rangeFor } from "../common";
-import { Container } from "../Container";
-import { Node } from "estree";
+import { Node } from 'estree';
+import { Disposable, window, ThemeColor } from 'vscode';
+import { Container } from '../Container';
+import { SearchResultsByFilePath, rangeFor } from '../common';
 
 export class MatchDecorator implements Disposable {
   private disposables: Disposable[] = [];
+
   private results?: SearchResultsByFilePath;
 
   private focusedMatchDecorationType = window.createTextEditorDecorationType({
     backgroundColor: new ThemeColor('editor.findMatchBackground'),
   });
+
   private matchDecorationType = window.createTextEditorDecorationType({
     backgroundColor: new ThemeColor('editor.findMatchHighlightBackground'),
   });
@@ -29,7 +31,7 @@ export class MatchDecorator implements Disposable {
       return;
     }
 
-    const otherMatches = matches.filter(match => match !== focusedMatch);
+    const otherMatches = matches.filter((match) => match !== focusedMatch);
     activeTextEditor.setDecorations(this.matchDecorationType, otherMatches.map(rangeFor));
     activeTextEditor.setDecorations(this.focusedMatchDecorationType, focusedMatch ? [rangeFor(focusedMatch)] : []);
   }

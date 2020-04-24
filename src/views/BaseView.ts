@@ -1,8 +1,18 @@
-import { TreeDataProvider, TreeItem, ProviderResult, Disposable, TreeView, window, TreeViewVisibilityChangeEvent, EventEmitter } from "vscode";
-import { TreeNode, isRoot } from "./common";
+import {
+  TreeDataProvider,
+  TreeItem,
+  ProviderResult,
+  Disposable,
+  TreeView,
+  window,
+  TreeViewVisibilityChangeEvent,
+  EventEmitter,
+} from 'vscode';
+import { TreeNode, isRoot } from './common';
 
 export abstract class BaseView<NodeType extends TreeNode> implements TreeDataProvider<NodeType>, Disposable {
   private changeEventEmitter = new EventEmitter<NodeType>();
+
   get onDidChangeTreeData() {
     return this.changeEventEmitter.event;
   }
@@ -17,7 +27,7 @@ export abstract class BaseView<NodeType extends TreeNode> implements TreeDataPro
 
   protected getChildrenOf(element: NodeType): ProviderResult<NodeType[]> {
     return element.getChildren() as NodeType[];
-  };
+  }
 
   protected tree: TreeView<NodeType>;
 

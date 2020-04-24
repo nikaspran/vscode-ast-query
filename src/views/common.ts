@@ -1,4 +1,4 @@
-import { TreeItem, TreeItemCollapsibleState } from "vscode";
+import { TreeItem, TreeItemCollapsibleState } from 'vscode';
 
 export class TreeNode {
   constructor(
@@ -21,4 +21,4 @@ export class TreeNode {
 
 export function isRoot(node?: TreeNode): node is undefined {
   return !node;
-};
+}

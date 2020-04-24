@@ -1,12 +1,17 @@
-import { Uri, Range } from "vscode";
+import { Uri, Range } from 'vscode';
 import { Node } from 'estree';
 
 export function rangeFor(match: Node) {
+  const location = match.loc;
+  if (!location) {
+    throw new Error(`Invalid match location: ${match.type}`);
+  }
+
   return new Range(
-    match.loc?.start.line! - 1,
-    match.loc?.start.column!,
-    match.loc?.end.line!,
-    match.loc?.end.column!,
+    location.start.line - 1,
+    location.start.column,
+    location.end.line,
+    location.end.column,
   );
 }
 

@@ -1,8 +1,9 @@
-import { ProviderResult, TreeItem, TreeItemCollapsibleState, Command } from "vscode";
-import { TreeNode } from "./common";
-import { BaseView } from "./BaseView";
-import { PromptForSearchCommand } from "../commands/PromptForSearchCommand";
-import { SearchScope } from "../common";
+/* eslint-disable max-classes-per-file */
+import { ProviderResult, TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
+import { TreeNode } from './common';
+import { BaseView } from './BaseView';
+import { PromptForSearchCommand } from '../commands/PromptForSearchCommand';
+import { SearchScope } from '../common';
 
 class SearchMenuNode extends TreeNode {
   constructor(message: string, private command: Command) {
@@ -28,15 +29,15 @@ export class SearchView extends BaseView<SearchMenuNode> {
         command: PromptForSearchCommand.key,
         arguments: [
           { scope: SearchScope.global },
-        ]
+        ],
       }),
       new SearchMenuNode('Search active file', {
         title: 'Search active file',
         command: PromptForSearchCommand.key,
         arguments: [
           { scope: SearchScope.activeFile },
-        ]
-      })
+        ],
+      }),
     ];
   }
 }

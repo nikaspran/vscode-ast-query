@@ -1,6 +1,6 @@
-import { Disposable, commands, window, Uri, TextEditorRevealType } from "vscode";
-import { Node } from "estree";
-import { rangeFor } from "../common";
+import { Disposable, commands, window, Uri, TextEditorRevealType } from 'vscode';
+import { Node } from 'estree';
+import { rangeFor } from '../common';
 
 export class OpenMatchCommand implements Disposable {
   public static key = 'ast-query.openMatch';

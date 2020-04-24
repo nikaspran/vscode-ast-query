@@ -1,4 +1,4 @@
-import { Disposable, commands } from "vscode";
+import { Disposable, commands } from 'vscode';
 
 export class ShowSearchResultsCommand implements Disposable {
   public static key = 'ast-query.showSearchResults';

@@ -1,4 +1,4 @@
-import { Disposable, commands, window, Task, workspace, CustomExecution, Pseudoterminal, Event, EventEmitter, TerminalDimensions, Uri } from 'vscode';
+import { Disposable, commands, window, workspace, Uri } from 'vscode';
 import * as esquery from 'esquery';
 import { parse } from '@typescript-eslint/typescript-estree';
 import { Node } from 'estree';
@@ -20,9 +20,9 @@ async function findMatches(files: Uri[], query: string): Promise<SearchResultsBy
   }));
 
   return results
-    .filter(result => result.matches.length > 0)
-    .reduce((results, current) => ({
-      ...results,
+    .filter((result) => result.matches.length > 0)
+    .reduce((previous, current) => ({
+      ...previous,
       [current.file.path]: current,
     }), {});
 }
@@ -36,7 +36,7 @@ export class SearchCommand implements Disposable {
     this.disposable = commands.registerCommand(SearchCommand.key, async (query: string, {
       scope = SearchScope.global,
     }: {
-      scope?: SearchScope,
+      scope?: SearchScope;
     } = {}) => {
       const inFiles = await this.getFiles(scope);
       const results = await findMatches(inFiles, query);
@@ -49,11 +49,14 @@ export class SearchCommand implements Disposable {
 
   private async getFiles(scope: SearchScope) {
     switch (scope) {
-      case SearchScope.activeFile:
+      case SearchScope.activeFile: {
         const uri = window.activeTextEditor?.document.uri;
         return uri ? [uri] : [];
+      }
       case SearchScope.global:
-        return await workspace.findFiles('**/*.{js,ts}', '**/node_modules/**');
+        return workspace.findFiles('**/*.{js,ts}', '**/node_modules/**');
+      default:
+        throw new Error('Invalid search scope');
     }
   }
 

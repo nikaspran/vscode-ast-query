@@ -1,9 +1,18 @@
-import { ProviderResult, Uri, EventEmitter, TreeItem, TreeItemCollapsibleState, ThemeIcon, TreeViewVisibilityChangeEvent, window, Disposable, TreeView, TreeViewSelectionChangeEvent } from "vscode";
+/* eslint-disable max-classes-per-file */
+import {
+  ProviderResult,
+  EventEmitter,
+  TreeItem,
+  TreeItemCollapsibleState,
+  ThemeIcon,
+  Disposable,
+  TreeViewSelectionChangeEvent,
+} from 'vscode';
 import { Node } from 'estree';
-import { TreeNode } from "./common";
-import { BaseView } from "./BaseView";
-import { SearchResult, SearchResultsByFilePath } from "../common";
-import { OpenMatchCommand } from "../commands/OpenMatchCommand";
+import { TreeNode } from './common';
+import { BaseView } from './BaseView';
+import { SearchResult, SearchResultsByFilePath } from '../common';
+import { OpenMatchCommand } from '../commands/OpenMatchCommand';
 
 class NoResultsFound extends TreeNode {
   constructor() {
@@ -13,6 +22,7 @@ class NoResultsFound extends TreeNode {
 
 class MatchNode extends TreeNode {
   constructor(private match: Node, private searchResult: SearchResult) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     super(searchResult.fileContents.substr(match.range![0], match.range![1]));
   }
 
@@ -24,7 +34,7 @@ class MatchNode extends TreeNode {
       arguments: [
         this.searchResult.file,
         this.match,
-      ]
+      ],
     };
     return item;
   }
@@ -51,7 +61,7 @@ class FileNode extends TreeNode {
   }
 
   getChildren() {
-    return this.searchResult.matches.map(match => new MatchNode(match, this.searchResult));
+    return this.searchResult.matches.map((match) => new MatchNode(match, this.searchResult));
   }
 }
 
@@ -59,6 +69,7 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
   private selectedMatch?: Node;
 
   private results?: SearchResult[];
+
   private disposables: Disposable[] = [];
 
   private changeSelectionEmitter = new EventEmitter<Node>();
@@ -68,7 +79,9 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
     this.disposables.push(
       this.changeSelectionEmitter,
       this.tree.onDidChangeSelection(this.notifyAboutSelectedMatch, this),
-      this.onSelectMatch((node) => this.selectedMatch = node)
+      this.onSelectMatch((node) => {
+        this.selectedMatch = node;
+      }),
     );
   }
 
@@ -85,7 +98,7 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
       return [new NoResultsFound()];
     }
 
-    return this.results.map(result => new FileNode(result));
+    return this.results.map((result) => new FileNode(result));
   }
 
   private notifyAboutSelectedMatch(event: TreeViewSelectionChangeEvent<TreeNode>) {
@@ -97,7 +110,7 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
     return this.selectedMatch;
   }
 
-  onSelectMatch(listener: (node: Node) => any) {
+  onSelectMatch(listener: (node: Node) => unknown) {
     return this.changeSelectionEmitter.event(listener);
   }
 
