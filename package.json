@@ -30,6 +30,10 @@
           "name": "Search"
         },
         {
+          "id": "ast-query.searchHistory",
+          "name": "History"
+        },
+        {
           "id": "ast-query.results",
           "name": "Results"
         }

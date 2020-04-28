@@ -41,6 +41,7 @@ export class SearchCommand implements Disposable {
       const inFiles = await this.getFiles(scope);
       const results = await findMatches(inFiles, query);
 
+      Container.searchHistoryView.push({ query, scope });
       Container.resultsView.show(results);
       Container.matchHighlightProvider.highlight(results);
       await commands.executeCommand(ShowSearchResultsCommand.key);

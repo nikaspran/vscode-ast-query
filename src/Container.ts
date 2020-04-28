@@ -6,11 +6,13 @@ import { SearchCommand } from './commands/SearchCommand';
 import { ShowSearchResultsCommand } from './commands/ShowSearchResultsCommand';
 import { OpenMatchCommand } from './commands/OpenMatchCommand';
 import { MatchDecorator } from './decorators/MatchDecorator';
+import { SearchHistoryView } from './views/SearchHistoryView';
 
 export class Container {
   static init(context: vscode.ExtensionContext) {
     context.subscriptions.push(
       this.searchView,
+      this.searchHistoryView,
       this.resultsView,
 
       new PromptForSearchCommand(),
@@ -29,6 +31,12 @@ export class Container {
   static get searchView() {
     this.searchViewInstance = this.searchViewInstance || new SearchView();
     return this.searchViewInstance;
+  }
+
+  private static searchHistoryViewInstance: SearchHistoryView;
+  static get searchHistoryView() {
+    this.searchHistoryViewInstance = this.searchHistoryViewInstance || new SearchHistoryView();
+    return this.searchHistoryViewInstance;
   }
 
   private static resultsViewInstance: ResultsView;
