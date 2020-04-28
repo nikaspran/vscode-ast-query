@@ -6,12 +6,7 @@ export class TreeNode {
   ) {}
 
   getTreeItem(): TreeItem {
-    const item = new TreeItem(this.message, TreeItemCollapsibleState.None);
-    // item.contextValue = ResourceType.Message;
-    // item.description = this._description;
-    // item.tooltip = this._tooltip;
-    // item.iconPath = this._iconPath;
-    return item;
+    return new TreeItem(this.message, TreeItemCollapsibleState.None);
   }
 
   getChildren(): TreeNode[] {

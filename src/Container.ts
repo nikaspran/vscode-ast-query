@@ -7,6 +7,8 @@ import { ShowSearchResultsCommand } from './commands/ShowSearchResultsCommand';
 import { OpenMatchCommand } from './commands/OpenMatchCommand';
 import { MatchDecorator } from './decorators/MatchDecorator';
 import { SearchHistoryView } from './views/SearchHistoryView';
+import { SearchActiveCommand } from './commands/SearchActiveCommand';
+import { SearchGlobalCommand } from './commands/SearchGlobalCommand';
 
 export class Container {
   static init(context: vscode.ExtensionContext) {
@@ -17,6 +19,8 @@ export class Container {
 
       new PromptForSearchCommand(),
       new SearchCommand(),
+      new SearchActiveCommand(),
+      new SearchGlobalCommand(),
       new ShowSearchResultsCommand(),
       new OpenMatchCommand(),
 

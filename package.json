@@ -20,7 +20,20 @@
     "commands": [
       {
         "command": "ast-query.promptForSearch",
-        "title": "AST Query: Search AST"
+        "title": "Search AST",
+        "category": "AST Query"
+      },
+      {
+        "command": "ast-query.searchActive",
+        "title": "Search active file",
+        "icon": "$(file)",
+        "category": "AST Query"
+      },
+      {
+        "command": "ast-query.searchGlobal",
+        "title": "Search all files",
+        "icon": "$(folder)",
+        "category": "AST Query"
       }
     ],
     "views": {
@@ -36,6 +49,30 @@
         {
           "id": "ast-query.results",
           "name": "Results"
+        }
+      ]
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "ast-query.searchActive",
+          "when": "false"
+        },
+        {
+          "command": "ast-query.searchGlobal",
+          "when": "false"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "ast-query.searchActive",
+          "when": "view == ast-query.searchHistory",
+          "group": "inline"
+        },
+        {
+          "command": "ast-query.searchGlobal",
+          "when": "view == ast-query.searchHistory",
+          "group": "inline"
         }
       ]
     },

@@ -5,7 +5,9 @@ import { BaseView } from './BaseView';
 import { SearchScope } from '../common';
 import { SearchCommand } from '../commands/SearchCommand';
 
-interface SearchQuery {
+const MAX_HISTORY_LENGTH = 10;
+
+export interface SearchQuery {
   query: string;
   scope?: SearchScope;
 }
@@ -22,6 +24,7 @@ class SearchHistoryNode extends TreeNode {
       command: SearchCommand.key,
       arguments: [
         this.search.query,
+        { scope: this.search.scope },
       ],
     };
     return item;
@@ -29,7 +32,7 @@ class SearchHistoryNode extends TreeNode {
 }
 
 export class SearchHistoryView extends BaseView<SearchHistoryNode> {
-  private searchHistory: { query: string; scope?: SearchScope }[] = [];
+  private searchHistory: SearchQuery[] = [];
 
   protected getId() {
     return 'ast-query.searchHistory';
@@ -40,11 +43,16 @@ export class SearchHistoryView extends BaseView<SearchHistoryNode> {
   }
 
   push({ query, scope }: SearchQuery) {
-    if (this.searchHistory[0]?.query === query) {
+    if (this.searchHistory.find((item) => item.query === query)) {
       return;
     }
 
     this.searchHistory.unshift({ query, scope });
+
+    if (this.searchHistory.length > MAX_HISTORY_LENGTH) {
+      this.searchHistory.pop();
+    }
+
     this.fireChangeEvent();
   }
 }
