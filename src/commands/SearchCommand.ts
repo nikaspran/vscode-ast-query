@@ -1,10 +1,15 @@
 import { Disposable, commands, window, workspace, Uri } from 'vscode';
 import * as esquery from 'esquery';
-import { parse } from '@typescript-eslint/typescript-estree';
+import * as estraverse from 'estraverse';
+import { parse, visitorKeys } from '@typescript-eslint/typescript-estree';
 import { Node } from 'estree';
 import { Container } from '../Container';
 import { ShowSearchResultsCommand } from './ShowSearchResultsCommand';
 import { SearchResultsByFilePath, SearchScope } from '../common';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+Object.assign(estraverse.VisitorKeys, visitorKeys); // extend estraverse with TypeScript definitions
 
 async function findMatches(files: Uri[], query: string): Promise<SearchResultsByFilePath> {
   const results = await Promise.all(files.map(async (file) => {
@@ -39,12 +44,16 @@ export class SearchCommand implements Disposable {
       scope?: SearchScope;
     } = {}) => {
       const inFiles = await this.getFiles(scope);
-      const results = await findMatches(inFiles, query);
+      try {
+        const results = await findMatches(inFiles, query);
 
-      Container.searchHistoryView.push({ query, scope });
-      Container.resultsView.show(results);
-      Container.matchHighlightProvider.highlight(results);
-      await commands.executeCommand(ShowSearchResultsCommand.key);
+        Container.searchHistoryView.push({ query, scope });
+        Container.resultsView.show(results);
+        Container.matchHighlightProvider.highlight(results);
+        await commands.executeCommand(ShowSearchResultsCommand.key);
+      } catch (error) {
+        console.log(error);
+      }
     });
   }
 
