@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { Disposable, commands, window, QuickPickItem } from 'vscode';
+import { Disposable, commands, QuickPickItem } from 'vscode';
 import { SearchCommand } from './SearchCommand';
 import { SearchScope } from '../common';
 import { showQuickPick } from '../utils/QuickPick';

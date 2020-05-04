@@ -15,13 +15,19 @@ async function findMatches(files: Uri[], query: string): Promise<SearchResultsBy
   const results = await Promise.all(files.map(async (file) => {
     const contents = (await workspace.fs.readFile(file)).toString();
     const ast = parse(contents);
-    const matches = esquery.query(ast as Node, query);
 
-    return {
-      file,
-      fileContents: contents,
-      matches,
-    };
+    try {
+      const matches = esquery.query(ast as Node, query);
+
+      return {
+        file,
+        fileContents: contents,
+        matches,
+      };
+    } catch (error) {
+      error.file = file;
+      throw error;
+    }
   }));
 
   return results
@@ -52,7 +58,13 @@ export class SearchCommand implements Disposable {
         Container.matchHighlightProvider.highlight(results);
         await commands.executeCommand(ShowSearchResultsCommand.key);
       } catch (error) {
-        console.log(error);
+        if (error.file) {
+          const file = error.file as Uri;
+          const message = `Unable to perform AST search on file "${file.path}", might contain unrecognized syntax`;
+          window.showErrorMessage(message);
+        } else {
+          throw error;
+        }
       }
     });
   }
