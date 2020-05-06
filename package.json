@@ -17,6 +17,23 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "AST Query",
+      "properties": {
+        "ast-query.globalFileGlob": {
+          "type": "string",
+          "default": "**/*.{js,ts}",
+          "title": "Global file glob",
+          "description": "Pattern used when searching all files"
+        },
+        "ast-query.globalIgnoreGlob": {
+          "type": "string",
+          "default": "**/node_modules/**",
+          "title": "Global ignore glob",
+          "description": "Ignore glob when searching all files"
+        }
+      }
+    },
     "commands": [
       {
         "command": "ast-query.promptForSearch",
@@ -110,6 +127,7 @@
     "glob": "^7.1.6",
     "mocha": "^7.1.1",
     "typescript": "^3.8.3",
+    "vsce": "^1.75.0",
     "vscode-test": "^1.3.0"
   },
   "dependencies": {

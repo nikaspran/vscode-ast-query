@@ -6,6 +6,7 @@ import { Node } from 'estree';
 import { Container } from '../Container';
 import { ShowSearchResultsCommand } from './ShowSearchResultsCommand';
 import { SearchResultsByFilePath, SearchScope } from '../common';
+import config from '../config';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -76,7 +77,7 @@ export class SearchCommand implements Disposable {
         return uri ? [uri] : [];
       }
       case SearchScope.global:
-        return workspace.findFiles('**/*.{js,ts}', '**/node_modules/**');
+        return workspace.findFiles(config.globalFileGlob, config.globalIgnoreGlob);
       default:
         throw new Error('Invalid search scope');
     }
