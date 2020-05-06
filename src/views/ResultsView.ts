@@ -14,6 +14,13 @@ import { BaseView } from './BaseView';
 import { SearchResult, SearchResultsByFilePath } from '../common';
 import { OpenMatchCommand } from '../commands/OpenMatchCommand';
 
+class ResultCountNode extends TreeNode {
+  constructor(results: SearchResult[]) {
+    const totalCount = results.reduce((sum, result) => sum + result.matches.length, 0);
+    super(`${totalCount} results in ${results.length} files`);
+  }
+}
+
 class NoResultsFound extends TreeNode {
   constructor() {
     super('No results found');
@@ -98,7 +105,10 @@ export class ResultsView extends BaseView<TreeNode> implements Disposable {
       return [new NoResultsFound()];
     }
 
-    return this.results.map((result) => new FileNode(result));
+    return [
+      new ResultCountNode(this.results),
+      ...this.results.map((result) => new FileNode(result)),
+    ];
   }
 
   private notifyAboutSelectedMatch(event: TreeViewSelectionChangeEvent<TreeNode>) {

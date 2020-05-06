@@ -26,9 +26,6 @@ export class Container {
 
       this.matchDecoratorInstance,
     );
-
-    // TODO: debug only
-    vscode.commands.executeCommand(SearchCommand.key, 'IfStatement');
   }
 
   private static searchViewInstance: SearchView;
