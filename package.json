@@ -20,7 +20,7 @@
     "url": "https://github.com/nikaspran/vscode-ast-query/issues"
   },
   "publisher": "nikaspran",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.44.0"
   },
