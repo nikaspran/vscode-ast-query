@@ -1,30 +1,23 @@
 # ast-query README
 
-## Features
+Search and highlight JavaScript and TypeScript via Abstract Syntax Tree queries.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Uses [esquery](https://github.com/estools/esquery) and [typescript-estree](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/typescript-estree).
 
-For example if there is an image subfolder under your extension project workspace:
+## Preview
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+![Screenshot](resources/screenshot.png)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+| | type | default | description |
+|---|---|---|---|
+| `ast-query.globalFileGlob` | string | **/*.{js,ts} | include glob used when searching all files |
+| `ast-query.globalIgnoreGlob` | string | \*\*/node_modules/\*\* | exclude glob used when searching all files |
 
 ## TODO
 
-* Add search history
+* Add ability to toggle active/global search when invoked via command palette
+* Remember actual searched file in search history, rather than just scope

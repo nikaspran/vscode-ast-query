@@ -19,6 +19,7 @@ class SearchHistoryNode extends TreeNode {
 
   getTreeItem(): TreeItem {
     const item = new TreeItem(this.message, TreeItemCollapsibleState.None);
+    item.description = this.search.scope === SearchScope.global ? '(all files)' : '(active file)';
     item.command = {
       title: this.search.query,
       command: SearchCommand.key,

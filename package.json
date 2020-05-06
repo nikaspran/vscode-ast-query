@@ -1,7 +1,23 @@
 {
   "name": "ast-query",
   "displayName": "ast-query",
-  "description": "",
+  "description": "Search and highlight JavaScript and TypeScript via Abstract Syntax Tree queries",
+  "keywords": [
+    "ast",
+    "esquery",
+    "abstract syntax tree",
+    "search",
+    "query"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/nikaspran/vscode-ast-query",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikaspran/vscode-ast-query"
+  },
+  "bugs": {
+    "url": "https://github.com/nikaspran/vscode-ast-query/issues"
+  },
   "publisher": "nikaspran",
   "version": "0.0.1",
   "engines": {
@@ -12,8 +28,7 @@
   ],
   "activationEvents": [
     "onCommand:ast-query.promptForSearch",
-    "onView:ast-query.search",
-    "*"
+    "onView:ast-query.search"
   ],
   "main": "./out/extension.js",
   "contributes": {

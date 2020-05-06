@@ -36,8 +36,8 @@ export class PromptForSearchCommand implements Disposable {
     this.disposable = commands.registerCommand(PromptForSearchCommand.key, async ({
       scope,
     }: {
-      scope: SearchScope;
-    }) => {
+      scope?: SearchScope;
+    } = {}) => {
       const options: QuickPickItem[] = supportedSelectors.map((selector) => ({
         label: selector.example,
         description: selector.type,
