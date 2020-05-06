@@ -9,7 +9,7 @@
     "search",
     "query"
   ],
-  "icon": "./resources/icon.png",
+  "icon": "resources/icon.png",
   "license": "MIT",
   "homepage": "https://github.com/nikaspran/vscode-ast-query",
   "repository": {
@@ -120,6 +120,7 @@
     }
   },
   "scripts": {
+    "release": "vsce publish --yarn",
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
     "lint": "eslint src --ext ts",
