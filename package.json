@@ -9,6 +9,7 @@
     "search",
     "query"
   ],
+  "icon": "./resources/icon.png",
   "license": "MIT",
   "homepage": "https://github.com/nikaspran/vscode-ast-query",
   "repository": {
