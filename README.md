@@ -16,6 +16,7 @@ This extension contributes the following settings:
 |---|---|---|---|
 | `ast-query.globalFileGlob` | string | **/*.{js,ts} | include glob used when searching all files |
 | `ast-query.globalIgnoreGlob` | string | \*\*/node_modules/\*\* | exclude glob used when searching all files |
+| `ast-query.useGitignore` | boolean | true | Exclude files specified in gitignore when searching all files |
 
 ## TODO
 
