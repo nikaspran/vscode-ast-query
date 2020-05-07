@@ -21,3 +21,4 @@ This extension contributes the following settings:
 
 * Add ability to toggle active/global search when invoked via command palette
 * Remember actual searched file in search history, rather than just scope
+* Disable search active file buttons in files with wrong file type
