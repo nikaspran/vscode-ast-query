@@ -1,4 +1,4 @@
-import { Uri, Range } from 'vscode';
+import { Uri, Range, GlobPattern } from 'vscode';
 import { Node } from 'estree';
 
 export function rangeFor(match: Node) {
@@ -13,6 +13,10 @@ export function rangeFor(match: Node) {
     location.end.line,
     location.end.column,
   );
+}
+
+export function joinGlobs(globs: GlobPattern[]) {
+  return `{${globs.join(',')}}`;
 }
 
 export interface SearchResultsByFilePath {

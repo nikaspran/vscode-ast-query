@@ -47,6 +47,12 @@
           "default": "**/node_modules/**",
           "title": "Global ignore glob",
           "description": "Ignore glob when searching all files"
+        },
+        "ast-query.useGitignore": {
+          "type": "boolean",
+          "default": true,
+          "title": "Use .gitignore",
+          "description": "Exclude files specified in gitignore when searching all files"
         }
       }
     },
@@ -148,6 +154,7 @@
   },
   "dependencies": {
     "@typescript-eslint/typescript-estree": "^2.28.0",
+    "dotgitignore": "^2.1.0",
     "esquery": "nikaspran/esquery#node",
     "estraverse": "5.1.0",
     "typescript": "^3.8.3"

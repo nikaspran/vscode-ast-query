@@ -1,1 +1,1 @@
-declare module 'esquery/dist/esquery.lite';
+declare module 'dotgitignore';
