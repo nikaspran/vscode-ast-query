@@ -31,7 +31,7 @@ function filterViaGitignore(uris: Uri[]) {
 async function findMatches(files: Uri[], query: string): Promise<SearchResultsByFilePath> {
   const results = await Promise.all(files.map(async (file) => {
     const contents = (await workspace.fs.readFile(file)).toString();
-    const ast = parse(contents);
+    const ast = parse(contents, { jsx: true });
 
     try {
       const matches = esquery.query(ast as Node, query);
